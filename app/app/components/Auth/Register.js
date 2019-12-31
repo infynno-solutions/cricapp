@@ -11,22 +11,28 @@ import {Config} from '../../common';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {connect} from 'react-redux';
-import {loginUser} from './AuthActions';
+import {registerUser} from './AuthActions';
 import CustomTextInput from '../CustomTextInput';
 
 const {height} = Dimensions.get('window');
 
-class Login extends Component {
+class Register extends Component {
   static navigationOptions = () => ({
     header: null,
   });
 
   constructor(props) {
     super(props);
-    this.loginSchema = Yup.object().shape({
+    this.registerSchema = Yup.object().shape({
+      name: Yup.string()
+        .min(3)
+        .required('Full Name is required.'),
       username: Yup.string()
         .min(3)
         .required('Username is required.'),
+      email: Yup.string()
+        .email('Email')
+        .required('Email is required.'),
       password: Yup.string()
         .min(4)
         .required('Password is Required'),
@@ -37,29 +43,45 @@ class Login extends Component {
     const {navigation} = this.props;
 
     return (
-      <View style={styles.loginContainer}>
+      <View style={styles.registerContainer}>
         <ScrollView>
           <View style={styles.headerTitleBG}>
-            <Text style={styles.headerTitle}>Hello! Welcome back</Text>
+            <Text style={styles.headerTitle}>Register New Account.</Text>
           </View>
           <Formik
-            initialValues={{username: '', password: ''}}
-            validationSchema={this.loginSchema}
+            initialValues={{name: '', username: '', email: '', password: ''}}
+            validationSchema={this.registerSchema}
             onSubmit={async values => {
               const user = {
+                name: values.name,
                 username: values.username,
+                email: values.email,
                 password: values.password,
               };
-              await this.props.loginUser(user, navigation);
+              await this.props.registerUser(user, navigation);
             }}>
             {({handleChange, handleBlur, handleSubmit, values, errors}) => (
-              <View style={styles.loginForm}>
+              <View style={styles.registerForm}>
+                <CustomTextInput
+                  placeholder="Full Name"
+                  onBlur={handleBlur('name')}
+                  onChangeText={handleChange('name')}
+                  value={values.name}
+                  error={errors.name}
+                />
                 <CustomTextInput
                   placeholder="Username"
                   onBlur={handleBlur('username')}
                   onChangeText={handleChange('username')}
                   value={values.username}
                   error={errors.username}
+                />
+                <CustomTextInput
+                  placeholder="Email"
+                  onBlur={handleBlur('email')}
+                  onChangeText={handleChange('email')}
+                  value={values.email}
+                  error={errors.email}
                 />
                 <CustomTextInput
                   placeholder="Password"
@@ -69,17 +91,16 @@ class Login extends Component {
                   error={errors.password}
                   secureTextEntry={true}
                 />
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('Register')}>
+                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                   <Text style={styles.forgotPassword}>
-                    Don't have an account? Register!
+                    Already have an account? Login!
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={handleSubmit}
-                  style={styles.loginButton}>
-                  <Text style={styles.loginButtonText}>Login</Text>
+                  style={styles.registerButton}>
+                  <Text style={styles.registerButtonText}>Register</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -91,7 +112,7 @@ class Login extends Component {
 }
 
 const styles = StyleSheet.create({
-  loginContainer: {
+  registerContainer: {
     flex: 1,
     backgroundColor: Config.backgroundColor,
   },
@@ -107,7 +128,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingTop: '30%',
   },
-  loginForm: {
+  registerForm: {
     backgroundColor: '#ffffff',
     marginTop: -50,
     borderRadius: 20,
@@ -124,7 +145,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginVertical: 20,
   },
-  loginButton: {
+  registerButton: {
     backgroundColor: Config.primaryColor,
     color: '#ffffff',
     borderRadius: 50,
@@ -132,7 +153,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     elevation: 5,
   },
-  loginButtonText: {
+  registerButtonText: {
     fontSize: 22,
     color: '#fff',
     textAlign: 'center',
@@ -147,5 +168,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  {loginUser},
-)(Login);
+  {registerUser},
+)(Register);

@@ -6,11 +6,16 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Config} from '../common';
 
 import Home from '../screens/Home';
+
+// Auth
 import AuthLoading from '../components/Auth/AuthLoading';
 import Login from '../components/Auth/Login';
 import ForgotPassword from '../components/Auth/ForgotPassword';
+import Register from '../components/Auth/Register';
+
 import Contests from '../screens/Contests';
 import BetOnWin from '../screens/BetOnWin';
+
 // Profile
 import Profile from '../components/Profile/Profile';
 
@@ -60,8 +65,9 @@ const AppStack = createBottomTabNavigator(
 );
 
 const AuthStack = createStackNavigator({
-  Login: Login,
-  ForgotPassword: ForgotPassword,
+  Login,
+  Register,
+  ForgotPassword,
 });
 
 export default createAppContainer(

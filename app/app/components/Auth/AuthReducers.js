@@ -4,6 +4,12 @@ const initialState = {
   message: '',
   isLoggedIn: false,
   user: null,
+  registerUser: {
+    loading: false,
+    data: '',
+    error: '',
+    message: '',
+  },
 };
 
 export default function AuthReducers(state = initialState, action) {
@@ -35,6 +41,31 @@ export default function AuthReducers(state = initialState, action) {
         message: '',
         isLoggedIn: false,
         user: null,
+      };
+    case 'REGISTER_INPROGRESS':
+      return {
+        ...state,
+        registerUser: {loading: true, error: '', data: '', message: ''},
+      };
+    case 'REGISTER_SUCCESS':
+      return {
+        ...state,
+        registerUser: {
+          loading: false,
+          error: '',
+          data: action.payload,
+          message: action.message,
+        },
+      };
+    case 'REGISTER_FAILURE':
+      return {
+        ...state,
+        registerUser: {
+          loading: false,
+          error: action.payload,
+          data: '',
+          message: '',
+        },
       };
     default:
       return {...state};

@@ -5,6 +5,7 @@ import RootRouter from './app/navigation/RootRouter';
 import {Provider} from 'react-redux';
 import {store, persistor} from './app/store';
 import {PersistGate} from 'redux-persist/es/integration/react';
+import {Config} from './app/common';
 
 class App extends Component {
   render() {
@@ -12,7 +13,10 @@ class App extends Component {
       <Provider store={store}>
         <PersistGate persistor={persistor}>
           <>
-            <StatusBar barStyle="light-content" />
+            <StatusBar
+              backgroundColor={Config.primaryColor}
+              barStyle="light-content"
+            />
             <View style={styles.appContainer}>
               <RootRouter />
             </View>
