@@ -27,6 +27,15 @@ export default function AuthReducers(state = initialState, action) {
         message: action.payload,
         user: null,
       };
+    case 'LOGOUT_SUCCESS':
+      return {
+        ...state,
+        isInprogress: false,
+        isError: false,
+        message: '',
+        isLoggedIn: false,
+        user: null,
+      };
     default:
       return {...state};
   }

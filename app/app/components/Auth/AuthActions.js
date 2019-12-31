@@ -24,3 +24,14 @@ export const loginUser = (user, navigation) => {
       });
   };
 };
+
+export const logoutUser = navigation => {
+  AsyncStorage.removeItem('isLoggedIn');
+  AsyncStorage.removeItem('token');
+  navigation.navigate('Auth');
+  Alert.alert('Success', 'Logged Out');
+
+  return dispatch => {
+    dispatch({type: 'LOGOUT_SUCCESS'});
+  };
+};

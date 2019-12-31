@@ -11,6 +11,8 @@ import Login from '../components/Auth/Login';
 import ForgotPassword from '../components/Auth/ForgotPassword';
 import Contests from '../screens/Contests';
 import BetOnWin from '../screens/BetOnWin';
+// Profile
+import Profile from '../components/Profile/Profile';
 
 const HomeStack = createStackNavigator(
   {Home, Contests, BetOnWin},
@@ -26,7 +28,7 @@ const HomeStack = createStackNavigator(
 );
 
 const ProfileStack = createStackNavigator(
-  {Home, Contests},
+  {Profile, Contests},
   {
     navigationOptions: ({navigation}) => ({
       tabBarVisible: navigation.state.index < 1,
