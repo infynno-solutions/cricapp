@@ -5,7 +5,8 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Config} from '../common';
 
-import Home from '../screens/Home';
+// Explore
+import ExploreMatches from '../components/Matches/ExploreMatches';
 
 // Auth
 import AuthLoading from '../components/Auth/AuthLoading';
@@ -20,7 +21,7 @@ import BetOnWin from '../screens/BetOnWin';
 import Profile from '../components/Profile/Profile';
 
 const HomeStack = createStackNavigator(
-  {Home, Contests, BetOnWin},
+  {Home: ExploreMatches, Contests, BetOnWin},
   {
     navigationOptions: ({navigation}) => ({
       tabBarVisible: navigation.state.index < 1,

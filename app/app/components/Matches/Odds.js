@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {Config} from '../common';
+import {Config} from '../../common';
 
 const Odds = ({team1, team2}) => {
   const totalBets = team1 + team2;

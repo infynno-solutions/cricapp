@@ -1,30 +1,35 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {Config} from '../common';
+import {Config} from '../../common';
 import Odds from './Odds';
+import moment from 'moment';
 
-class Match extends Component {
+class MatchCard extends Component {
   render() {
-    const {navigation} = this.props;
+    const {navigation, match} = this.props;
+
     return (
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.matchContainer}
         onPress={() =>
           navigation.navigate('BetOnWin', {
-            team1: 'Manchester United',
-            team2: 'Liverpool FC',
-            time: '25/12/2019 17:00',
+            id: match.unique_id,
+            team1: match['team-1'],
+            team2: match['team-2'],
+            time: match.dateTimeGMT,
           })
         }>
         <View style={styles.leagueTime}>
-          <Text style={styles.league}>England/Premier League</Text>
-          <Text style={styles.time}>25/12/2019 17:00</Text>
+          <Text style={styles.league}>{match.type}</Text>
+          <Text style={styles.time}>
+            {moment(match.dateTimeGMT).format('DD/MM/YYYY hh:mm A')}
+          </Text>
         </View>
         <View>
-          <Text style={styles.matchName}>
-            Manchester United vs Liverpool FC
-          </Text>
+          <Text style={styles.matchName}>{`${match['team-1']} vs ${
+            match['team-2']
+          }`}</Text>
         </View>
         <Odds team1={40} team2={60} />
       </TouchableOpacity>
@@ -62,4 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Match;
+export default MatchCard;
