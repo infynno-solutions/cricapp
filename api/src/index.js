@@ -7,6 +7,7 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 
 const userController = require("./users/user.controller");
+const betController = require("./bets/bet.controller");
 
 dotenv.config({ path: ".env" });
 
@@ -53,6 +54,9 @@ app.use(passport.session());
 
 app.post("/login", userController.loginUser);
 app.post("/register", userController.registerUser);
+
+app.post("/bet", betController.placeBet);
+app.get("/bet", betController.getBets);
 
 app.listen(process.env.PORT, () =>
   console.log(`App is running on ${process.env.APP_URL}:${process.env.PORT}`)

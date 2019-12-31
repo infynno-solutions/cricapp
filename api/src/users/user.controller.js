@@ -72,7 +72,7 @@ exports.registerUser = async (req, res) => {
   const validate = await signUp.validate(userData, { abortEarly: false });
 
   if (validate.error) {
-    res.status(200).json({
+    return res.status(200).json({
       success: false,
       message: "Validation failed",
       errors: joiErrors(validate)
@@ -88,7 +88,7 @@ exports.registerUser = async (req, res) => {
         });
       }
 
-      res.status(201).json({
+      return res.status(201).json({
         success: true,
         message: "User created successfully",
         user: user
