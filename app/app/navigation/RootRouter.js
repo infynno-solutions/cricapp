@@ -6,8 +6,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Config} from '../common';
 
 import Home from '../screens/Home';
-import Login from '../screens/Login';
-import ForgotPassword from '../screens/ForgotPassword';
+import AuthLoading from '../components/Auth/AuthLoading';
+import Login from '../components/Auth/Login';
+import ForgotPassword from '../components/Auth/ForgotPassword';
 import Contests from '../screens/Contests';
 import BetOnWin from '../screens/BetOnWin';
 
@@ -66,9 +67,10 @@ export default createAppContainer(
     {
       Auth: AuthStack,
       App: AppStack,
+      AuthLoading: AuthLoading,
     },
     {
-      initialRouteName: 'Auth',
+      initialRouteName: 'AuthLoading',
     },
   ),
 );

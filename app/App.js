@@ -2,16 +2,23 @@ import React, {Component} from 'react';
 import 'react-native-gesture-handler';
 import {View, StyleSheet, StatusBar} from 'react-native';
 import RootRouter from './app/navigation/RootRouter';
+import {Provider} from 'react-redux';
+import {store, persistor} from './app/store';
+import {PersistGate} from 'redux-persist/es/integration/react';
 
 class App extends Component {
   render() {
     return (
-      <>
-        <StatusBar barStyle="light-content" />
-        <View style={styles.appContainer}>
-          <RootRouter />
-        </View>
-      </>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <>
+            <StatusBar barStyle="light-content" />
+            <View style={styles.appContainer}>
+              <RootRouter />
+            </View>
+          </>
+        </PersistGate>
+      </Provider>
     );
   }
 }
