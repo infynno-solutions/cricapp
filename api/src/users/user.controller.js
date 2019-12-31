@@ -32,7 +32,7 @@ exports.loginUser = async (req, res, next) => {
           .json({ success: false, message: "Somthing went wrong!" });
       if (!user) {
         // return res.redirect("/login");
-        return res.status(400).json({
+        return res.status(200).json({
           success: false,
           message: "Invalid username or password"
         });
@@ -72,7 +72,7 @@ exports.registerUser = async (req, res) => {
   const validate = await signUp.validate(userData, { abortEarly: false });
 
   if (validate.error) {
-    res.status(400).json({
+    res.status(200).json({
       success: false,
       message: "Validation failed",
       errors: joiErrors(validate)
@@ -81,7 +81,7 @@ exports.registerUser = async (req, res) => {
     const user = new User(userData);
     user.save(err => {
       if (err) {
-        return res.status(400).json({
+        return res.status(200).json({
           success: false,
           message: "Validation failed",
           errors: mongooseErrors(err)
