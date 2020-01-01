@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {
   View,
+  Text,
   StyleSheet,
   ActivityIndicator,
   FlatList,
@@ -30,7 +31,7 @@ class ExploreMatches extends Component {
 
   renderMatches = ({item, index}) => {
     const {navigation} = this.props;
-    return <MatchCard navigation={navigation} match={item} key={index} />;
+    return <MatchCard navigation={navigation} match={item} key={item.id} />;
   };
 
   render() {
@@ -48,6 +49,11 @@ class ExploreMatches extends Component {
               keyExtractor={(item, index) => `matched-${item.id} || ${index}`}
               renderItem={this.renderMatches}
               refreshing={state.isLoading}
+              ListHeaderComponent={() => (
+                <View>
+                  <Text style={styles.sectionTitle}>Upcoming Matches</Text>
+                </View>
+              )}
               refreshControl={
                 <RefreshControl
                   refreshing={state.isLoading}
@@ -66,6 +72,12 @@ const styles = StyleSheet.create({
   homeContainer: {
     flex: 1,
     backgroundColor: Config.backgroundColor,
+  },
+  sectionTitle: {
+    fontWeight: 'bold',
+    marginHorizontal: 20,
+    marginVertical: 10,
+    fontSize: 18,
   },
 });
 

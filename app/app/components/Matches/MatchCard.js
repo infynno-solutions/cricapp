@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {Config} from '../../common';
-import Odds from './Odds';
 import moment from 'moment';
 
 class MatchCard extends Component {
@@ -11,27 +10,30 @@ class MatchCard extends Component {
     return (
       <TouchableOpacity
         activeOpacity={0.8}
-        style={styles.matchContainer}
-        onPress={() =>
-          navigation.navigate('BetOnWin', {
-            id: match.unique_id,
-            team1: match['team-1'],
-            team2: match['team-2'],
-            time: match.dateTimeGMT,
-          })
-        }>
-        <View style={styles.leagueTime}>
-          <Text style={styles.league}>{match.type}</Text>
-          <Text style={styles.time}>
-            {moment(match.dateTimeGMT).format('DD/MM/YYYY hh:mm A')}
-          </Text>
+        onPress={() => navigation.navigate('BetOnWin', match)}>
+        <View style={styles.matchContainer}>
+          <Image
+            source={{uri: match.localteam.image_path}}
+            style={styles.teamImage}
+            resizeMode="contain"
+          />
+          <View style={styles.matchInfo}>
+            <Text style={styles.matchName}>{match.league.name}</Text>
+            <Text style={styles.matchName}>
+              {`${match.localteam.code} vs ${match.visitorteam.code}`}
+            </Text>
+            <Text style={styles.time}>
+              {moment(match.starting_at)
+                .startOf('hour')
+                .fromNow()}
+            </Text>
+          </View>
+          <Image
+            source={{uri: match.visitorteam.image_path}}
+            style={styles.teamImage}
+            resizeMode="contain"
+          />
         </View>
-        <View>
-          <Text style={styles.matchName}>{`${match['team-1']} vs ${
-            match['team-2']
-          }`}</Text>
-        </View>
-        <Odds team1={40} team2={60} />
       </TouchableOpacity>
     );
   }
@@ -39,31 +41,34 @@ class MatchCard extends Component {
 
 const styles = StyleSheet.create({
   matchContainer: {
-    flex: 0,
+    // flex: 0,
     marginHorizontal: 20,
     marginVertical: 8,
     backgroundColor: '#ffffff',
     elevation: 5,
     borderRadius: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     paddingVertical: 15,
-  },
-  leagueTime: {
-    flex: 0,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  league: {
-    fontWeight: 'bold',
-    color: Config.highlightColor,
+  matchInfo: {
+    flex: 1,
+    flexDirection: 'column',
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
+  teamImage: {width: 80, height: 80},
   time: {
     fontWeight: 'bold',
     color: Config.highlightColor,
+    // flex: 1,
+    textAlign: 'center',
   },
   matchName: {
     fontSize: 16,
-    marginVertical: 5,
   },
 });
 

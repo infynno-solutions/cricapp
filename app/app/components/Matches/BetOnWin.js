@@ -7,10 +7,13 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
-import {PlacedBets} from '../components';
-import {Config} from '../common';
+import PlacedBets from '../PlacedBets';
+import {Config} from '../../common';
+import {connect} from 'react-redux';
+import {getBetsByMatch} from './MatchActions';
 
 class BetOnWin extends Component {
   static navigationOptions = () => ({
@@ -32,6 +35,15 @@ class BetOnWin extends Component {
     };
   }
 
+  componentDidMount() {
+    this.getBetsByMatch();
+  }
+
+  getBetsByMatch = async () => {
+    const {navigation} = this.props;
+    await this.props.getBetsByMatch(navigation.state.params.id);
+  };
+
   handlePlaceBet = () => {
     const {selectedTeam, betAmount} = this.state;
     if (selectedTeam !== '' && betAmount !== 0) {
@@ -44,7 +56,9 @@ class BetOnWin extends Component {
   };
 
   render() {
-    const {navigation} = this.props;
+    const {navigation, state} = this.props;
+
+    // console.log(navigation.state.params);
 
     return (
       <View style={styles.container}>
@@ -54,8 +68,14 @@ class BetOnWin extends Component {
             <RNPickerSelect
               onValueChange={value => this.setState({selectedTeam: value})}
               items={[
-                {label: navigation.state.params.team1, value: 'team1'},
-                {label: navigation.state.params.team2, value: 'team2'},
+                {
+                  label: navigation.state.params.localteam.name,
+                  value: navigation.state.params.localteam.id,
+                },
+                {
+                  label: navigation.state.params.visitorteam.name,
+                  value: navigation.state.params.visitorteam.id,
+                },
               ]}
               useNativeAndroidPickerStyle={true}
               style={pickerSelectStyles}
@@ -96,8 +116,22 @@ class BetOnWin extends Component {
               <Text style={styles.placeBtnText}>Place Bet</Text>
             </TouchableOpacity>
             <Text style={styles.sectionTitle}>Placed Bets</Text>
-            <PlacedBets />
-            <PlacedBets />
+            {state.getBetsByMatch.loading ? (
+              <ActivityIndicator />
+            ) : (
+              <>
+                {state.getBetsByMatch.bets &&
+                state.getBetsByMatch.bets.length > 0 ? (
+                  state.getBetsByMatch.bets.map(bet => (
+                    <PlacedBets bet={bet} key={bet._id} />
+                  ))
+                ) : (
+                  <View>
+                    <Text>No Bets Placed.</Text>
+                  </View>
+                )}
+              </>
+            )}
           </View>
         </ScrollView>
       </View>
@@ -171,4 +205,13 @@ const pickerSelectStyles = StyleSheet.create({
   },
 });
 
-export default BetOnWin;
+const mapStateToProps = state => {
+  return {
+    state: state.MatchReducers,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  {getBetsByMatch},
+)(BetOnWin);

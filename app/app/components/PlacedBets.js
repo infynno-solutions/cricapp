@@ -1,21 +1,23 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {Config} from '../common';
+import moment from 'moment';
 
-const PlacedBets = () => {
+const PlacedBets = bet => {
+  console.log(bet);
   return (
     <View style={styles.container}>
       <View style={styles.betWrapper}>
         <View style={styles.betInfo}>
-          <Text style={styles.betId}>BET ID #1234</Text>
-          <Text>$10</Text>
+          <Text style={styles.betId}>BET ID #{bet.bet._id}</Text>
+          <Text>${bet.bet.amount}</Text>
         </View>
         <View style={styles.betInfo}>
-          <Text>25/12/2019 17:00</Text>
-          <Text>Pending</Text>
+          <Text>{moment(bet.bet.createdAt).format('DD/MM/YYYY hh:m A')}</Text>
+          <Text>Result Pending</Text>
         </View>
       </View>
-      <View style={styles.transactionWrapper}>
+      {/* <View style={styles.transactionWrapper}>
         <View style={styles.betInfo}>
           <Text style={styles.betId}>TRANSACTION ID</Text>
           <Text>#1234</Text>
@@ -24,7 +26,7 @@ const PlacedBets = () => {
           <Text style={styles.betId}>Odds</Text>
           <Text>0.30</Text>
         </View>
-      </View>
+      </View> */}
     </View>
   );
 };

@@ -3,6 +3,12 @@ const initialState = {
   error: false,
   message: '',
   matches: null,
+  getBetsByMatch: {
+    loading: false,
+    bets: null,
+    error: false,
+    message: '',
+  },
 };
 
 export default function MatchReducers(state = initialState, action) {
@@ -24,6 +30,26 @@ export default function MatchReducers(state = initialState, action) {
         error: true,
         message: action.message,
         matches: null,
+      };
+    case 'BETS_BY_MATCH_FETCH_PENDING':
+      return {
+        ...state,
+        getBetsByMatch: {loading: false, error: false, message: ''},
+      };
+    case 'BETS_BY_MATCH_FETCH_SUCCESS':
+      return {
+        ...state,
+        getBetsByMatch: {
+          loading: false,
+          error: false,
+          message: '',
+          bets: action.bets,
+        },
+      };
+    case 'BETS_BY_MATCH_FETCH_FAILURE':
+      return {
+        ...state,
+        getBetsByMatch: {loading: false, error: true, message: action.message},
       };
     default:
       return {...state};

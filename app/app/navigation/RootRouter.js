@@ -15,7 +15,7 @@ import ForgotPassword from '../components/Auth/ForgotPassword';
 import Register from '../components/Auth/Register';
 
 import Contests from '../screens/Contests';
-import BetOnWin from '../screens/BetOnWin';
+import BetOnWin from '../components/Matches/BetOnWin';
 
 // Profile
 import Profile from '../components/Profile/Profile';
