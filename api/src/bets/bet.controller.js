@@ -14,6 +14,7 @@ exports.placeBet = async (req, res) => {
     date: req.body.date,
     amount: req.body.amount,
     beton: req.body.beton,
+    match_id: req.body.match_id,
     user: req.user
   };
 
@@ -44,6 +45,33 @@ exports.placeBet = async (req, res) => {
 exports.getBets = async (req, res) => {
   if (req.user) {
     const bets = await Bet.find({ user: req.user.id });
+    return res.status(200).json({
+      success: true,
+      message: "Bets Found.",
+      bets: bets
+    });
+  } else {
+    return res.status(500).json({
+      success: false,
+      message: "User not found."
+    });
+  }
+};
+
+/**
+ * GET /bet/match/id
+ * Header Bearer Token
+ * List bets of user for a match.
+ */
+
+exports.getBetsByMatch = async (req, res) => {
+  // console.log(req.params);
+  // process.exit();
+  if (req.user) {
+    const bets = await Bet.find({
+      user: req.user.id,
+      match_id: req.params.match_id
+    });
     return res.status(200).json({
       success: true,
       message: "Bets Found.",

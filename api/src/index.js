@@ -57,6 +57,7 @@ app.post("/register", userController.registerUser);
 
 app.post("/bet", betController.placeBet);
 app.get("/bet", betController.getBets);
+app.get("/bet/match/:match_id", betController.getBetsByMatch);
 
 app.listen(process.env.PORT, () =>
   console.log(`App is running on ${process.env.APP_URL}:${process.env.PORT}`)
