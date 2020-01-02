@@ -71,7 +71,7 @@ exports.getBetsByMatch = async (req, res) => {
     const bets = await Bet.find({
       user: req.user.id,
       match_id: req.params.match_id
-    });
+    }).sort({ createdAt: "desc" });
     return res.status(200).json({
       success: true,
       message: "Bets Found.",
