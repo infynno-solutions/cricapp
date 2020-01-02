@@ -9,6 +9,12 @@ const initialState = {
     error: false,
     message: '',
   },
+  livescore: {
+    loading: false,
+    error: false,
+    message: '',
+    score: null,
+  },
 };
 
 export default function MatchReducers(state = initialState, action) {
@@ -50,6 +56,31 @@ export default function MatchReducers(state = initialState, action) {
       return {
         ...state,
         getBetsByMatch: {loading: false, error: true, message: action.message},
+      };
+    case 'LIVESCORE_FETCH_PENDING':
+      return {
+        ...state,
+        livescore: {loading: true, error: false, message: '', score: null},
+      };
+    case 'LIVESCORE_FETCH_SUCCESS':
+      return {
+        ...state,
+        livescore: {
+          loading: false,
+          error: false,
+          message: '',
+          score: action.livescore,
+        },
+      };
+    case 'LIVESCORE_FETCH_FAILURE':
+      return {
+        ...state,
+        livescore: {
+          loading: false,
+          error: true,
+          message: action.message,
+          score: null,
+        },
       };
     default:
       return {...state};

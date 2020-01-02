@@ -14,14 +14,16 @@ import Login from '../components/Auth/Login';
 import ForgotPassword from '../components/Auth/ForgotPassword';
 import Register from '../components/Auth/Register';
 
+// Match
 import Contests from '../screens/Contests';
 import BetOnWin from '../components/Matches/BetOnWin';
+import LiveScore from '../components/Matches/LiveScore';
 
 // Profile
 import Profile from '../components/Profile/Profile';
 
 const HomeStack = createStackNavigator(
-  {Home: ExploreMatches, Contests, BetOnWin},
+  {Home: ExploreMatches, Contests, BetOnWin, LiveScore},
   {
     navigationOptions: ({navigation}) => ({
       tabBarVisible: navigation.state.index < 1,
@@ -34,7 +36,7 @@ const HomeStack = createStackNavigator(
 );
 
 const ProfileStack = createStackNavigator(
-  {Profile, Contests},
+  {Profile, Contests, LiveScore},
   {
     navigationOptions: ({navigation}) => ({
       tabBarVisible: navigation.state.index < 1,

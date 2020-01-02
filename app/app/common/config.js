@@ -4,6 +4,7 @@ export default {
   accentColor: '#fdd003',
   highlightColor: '#27397e',
   backgroundColor: '#f4f9fb',
-  errorColor: 'red',
+  errorColor: '#e74c3c',
+  successColor: '#2ecc71',
   apiKey: 'ArAX5LcbCkLst7I0uqZRiypcFYnXUHbc8JfVefHkqZlAs3vw3TaMx5MP74nW',
 };

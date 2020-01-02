@@ -8,6 +8,7 @@ import MatchReducers from './components/Matches/MatchReducers';
 const config = {
   key: 'root',
   storage: AsyncStorage,
+  blacklist: ['MatchReducers'],
 };
 
 const rootReducer = persistCombineReducers(config, {

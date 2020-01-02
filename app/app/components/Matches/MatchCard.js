@@ -10,7 +10,7 @@ class MatchCard extends Component {
     return (
       <TouchableOpacity
         activeOpacity={0.8}
-        onPress={() => navigation.navigate('BetOnWin', match)}>
+        onPress={() => navigation.navigate('LiveScore', match)}>
         <View style={styles.matchContainer}>
           <Image
             source={{uri: match.localteam.image_path}}
