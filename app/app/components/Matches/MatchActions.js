@@ -98,12 +98,14 @@ export const placeBet = bet => {
   };
 };
 
-export const getLiveScore = match_id => {
+export const getLiveScore = (match_id, status) => {
   return dispatch => {
     dispatch({type: 'LIVESCORE_FETCH_PENDING'});
     axios
       .get(
-        `https://cricket.sportmonks.com/api/v2.0/livescores/${match_id}?api_token=ArAX5LcbCkLst7I0uqZRiypcFYnXUHbc8JfVefHkqZlAs3vw3TaMx5MP74nW&include=batting.batsman,batting.catchstump,batting.bowler,bowling.bowler,runs,odds,scoreboards,localteam,visitorteam`,
+        `https://cricket.sportmonks.com/api/v2.0/${
+          status === 'Finished' ? 'fixtures' : 'livescores'
+        }/${match_id}?api_token=ArAX5LcbCkLst7I0uqZRiypcFYnXUHbc8JfVefHkqZlAs3vw3TaMx5MP74nW&include=batting.batsman,batting.catchstump,batting.bowler,bowling.bowler,runs,odds,scoreboards,localteam,visitorteam`,
       )
       .then(res => {
         if (res.data.status === 'error') {

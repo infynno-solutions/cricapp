@@ -8,6 +8,7 @@ import moment from 'moment';
 import ScoreBoard from './ScoreBoard';
 import Batting from './Batting';
 import Bowling from './Bowling';
+import Accordion from '../Accordion';
 
 class LiveScore extends Component {
   static navigationOptions = ({navigation}) => ({
@@ -30,7 +31,9 @@ class LiveScore extends Component {
   getLiveScore = async () => {
     const {navigation} = this.props;
     const match_id = navigation.state.params.id;
-    await this.props.getLiveScore(match_id);
+    const status = navigation.state.params.status;
+    // console.warn(status);
+    await this.props.getLiveScore(match_id, status);
   };
 
   render() {
@@ -59,27 +62,40 @@ class LiveScore extends Component {
                     </>
                   ) : (
                     <>
+                      {state.livescore.score.note && (
+                        <Text style={styles.matchNote}>
+                          {state.livescore.score.note}
+                        </Text>
+                      )}
                       {state.livescore.score.scoreboards.map(
                         scoreboard =>
                           scoreboard.type === 'total' && (
                             <View key={scoreboard.scoreboard}>
-                              <ScoreBoard
-                                score={scoreboard}
-                                key={scoreboard.scoreboard}
-                                team={
-                                  scoreboard.team_id ===
-                                  state.livescore.score.localteam.id
-                                    ? state.livescore.score.localteam.name
-                                    : state.livescore.score.visitorteam.name
-                                }
-                              />
-                              <Batting
-                                batting={state.livescore.score.batting}
-                                battingTeam={scoreboard.scoreboard}
-                              />
-                              <Bowling
-                                bowling={state.livescore.score.bowling}
-                                bowlingTeam={scoreboard.scoreboard}
+                              <Accordion
+                                title={() => (
+                                  <ScoreBoard
+                                    score={scoreboard}
+                                    key={scoreboard.scoreboard}
+                                    team={
+                                      scoreboard.team_id ===
+                                      state.livescore.score.localteam.id
+                                        ? state.livescore.score.localteam.name
+                                        : state.livescore.score.visitorteam.name
+                                    }
+                                  />
+                                )}
+                                content={() => (
+                                  <>
+                                    <Batting
+                                      batting={state.livescore.score.batting}
+                                      battingTeam={scoreboard.scoreboard}
+                                    />
+                                    <Bowling
+                                      bowling={state.livescore.score.bowling}
+                                      bowlingTeam={scoreboard.scoreboard}
+                                    />
+                                  </>
+                                )}
                               />
                             </View>
                           ),
@@ -98,9 +114,14 @@ class LiveScore extends Component {
 
 const styles = StyleSheet.create({
   matchNotLive: {
-    // paddingHorizontal:20,
     padding: 20,
     textAlign: 'center',
+  },
+  matchNote: {
+    color: Config.errorColor,
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
   },
 });
 const mapStateToProps = state => {
