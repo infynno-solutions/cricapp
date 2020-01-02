@@ -4,20 +4,23 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  TextInput,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import PlacedBets from '../PlacedBets';
+import CustomTextInput from '../CustomTextInput';
 import {Config} from '../../common';
 import {connect} from 'react-redux';
-import {getBetsByMatch} from './MatchActions';
+import {getBetsByMatch, placeBet} from './MatchActions';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 
 class BetOnWin extends Component {
-  static navigationOptions = () => ({
-    title: 'Place Bets',
+  static navigationOptions = ({navigation}) => ({
+    title: `${navigation.state.params.localteam.code} vs ${
+      navigation.state.params.visitorteam.code
+    }`,
     headerTintColor: '#fff',
     headerStyle: {
       backgroundColor: Config.primaryColor,
@@ -29,10 +32,10 @@ class BetOnWin extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      selectedTeam: '',
-      betAmount: '10',
-    };
+    this.betSchema = Yup.object().shape({
+      amount: Yup.string().required(),
+      beton: Yup.string().required(),
+    });
   }
 
   componentDidMount() {
@@ -44,17 +47,6 @@ class BetOnWin extends Component {
     await this.props.getBetsByMatch(navigation.state.params.id);
   };
 
-  handlePlaceBet = () => {
-    const {selectedTeam, betAmount} = this.state;
-    if (selectedTeam !== '' && betAmount !== 0) {
-      const selectedTeamName = this.props.navigation.state.params[selectedTeam];
-      Alert.alert(
-        'Success',
-        `Your bet of ${betAmount} on ${selectedTeamName} has been placed.`,
-      );
-    }
-  };
-
   render() {
     const {navigation, state} = this.props;
 
@@ -64,72 +56,107 @@ class BetOnWin extends Component {
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.betWrapper}>
-            <Text style={styles.sectionTitle}>Select Team</Text>
-            <RNPickerSelect
-              onValueChange={value => this.setState({selectedTeam: value})}
-              items={[
-                {
-                  label: navigation.state.params.localteam.name,
-                  value: navigation.state.params.localteam.id,
-                },
-                {
-                  label: navigation.state.params.visitorteam.name,
-                  value: navigation.state.params.visitorteam.id,
-                },
-              ]}
-              useNativeAndroidPickerStyle={true}
-              style={pickerSelectStyles}
-            />
-            <Text style={styles.sectionTitle}>Bet on Win</Text>
-            <TextInput
-              placeholder="Bet Amount"
-              style={styles.betInput}
-              value={this.state.betAmount}
-              keyboardType="number-pad"
-              onChangeText={value => this.setState({betAmount: value})}
-            />
-            <View style={styles.increase}>
-              <TouchableOpacity
-                style={styles.increaseBtn}
-                onPress={() => this.setState({betAmount: '50'})}>
-                <Text style={styles.increaseBtnText}>+50</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.increaseBtn}
-                onPress={() => this.setState({betAmount: '100'})}>
-                <Text style={styles.increaseBtnText}>+100</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.increaseBtn}
-                onPress={() => this.setState({betAmount: '200'})}>
-                <Text style={styles.increaseBtnText}>+200</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.increaseBtn}
-                onPress={() => this.setState({betAmount: '500'})}>
-                <Text style={styles.increaseBtnText}>+500</Text>
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity
-              style={styles.placeBtn}
-              onPress={() => this.handlePlaceBet()}>
-              <Text style={styles.placeBtnText}>Place Bet</Text>
-            </TouchableOpacity>
-            <Text style={styles.sectionTitle}>Placed Bets</Text>
+            <Formik
+              initialValues={{beton: '', amount: '10'}}
+              validationSchema={this.betSchema}
+              onSubmit={async values => {
+                const bet = {
+                  team1: navigation.state.params.localteam.id,
+                  team2: navigation.state.params.visitorteam.id,
+                  match_id: navigation.state.params.id,
+                  beton: values.beton,
+                  amount: values.amount,
+                  date: navigation.state.params.starting_at,
+                };
+                // console.warn(bet);
+                await this.props.placeBet(bet);
+              }}>
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                setFieldValue,
+              }) => (
+                <>
+                  <Text style={styles.sectionTitle}>Select Team</Text>
+                  <RNPickerSelect
+                    onValueChange={
+                      value => setFieldValue('beton', value)
+                      // this.setState({selectedTeam: value})
+                    }
+                    items={[
+                      {
+                        label: navigation.state.params.localteam.name,
+                        value: navigation.state.params.localteam.id,
+                      },
+                      {
+                        label: navigation.state.params.visitorteam.name,
+                        value: navigation.state.params.visitorteam.id,
+                      },
+                    ]}
+                    useNativeAndroidPickerStyle={true}
+                    style={pickerSelectStyles}
+                  />
+                  <Text style={styles.sectionTitle}>Bet on Win</Text>
+                  <CustomTextInput
+                    placeholder="Bet Amount"
+                    style={styles.betInput}
+                    keyboardType="number-pad"
+                    onBlur={handleBlur('amount')}
+                    onChangeText={handleChange('amount')}
+                    value={values.amount}
+                    error={errors.amount}
+                  />
+                  <View style={styles.increase}>
+                    <TouchableOpacity
+                      style={styles.increaseBtn}
+                      onPress={() => setFieldValue('amount', '50')}>
+                      <Text style={styles.increaseBtnText}>+50</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.increaseBtn}
+                      onPress={() => setFieldValue('amount', '100')}>
+                      <Text style={styles.increaseBtnText}>+100</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.increaseBtn}
+                      onPress={() => setFieldValue('amount', '200')}>
+                      <Text style={styles.increaseBtnText}>+200</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.increaseBtn}
+                      onPress={() => setFieldValue('amount', '500')}>
+                      <Text style={styles.increaseBtnText}>+500</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.placeBtn}
+                    onPress={() => handleSubmit()}>
+                    <Text style={styles.placeBtnText}>Place Bet</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </Formik>
+            <Text style={styles.sectionTitle}>My Bets</Text>
             {state.getBetsByMatch.loading ? (
-              <ActivityIndicator />
+              <ActivityIndicator size="large" color={Config.primaryColor} />
             ) : (
               <>
                 {state.getBetsByMatch.bets &&
-                state.getBetsByMatch.bets.length > 0 ? (
+                  state.getBetsByMatch.bets.length > 0 &&
                   state.getBetsByMatch.bets.map(bet => (
-                    <PlacedBets bet={bet} key={bet._id} />
-                  ))
-                ) : (
-                  <View>
-                    <Text>No Bets Placed.</Text>
-                  </View>
-                )}
+                    <PlacedBets
+                      bet={bet}
+                      key={bet._id}
+                      placedOn={
+                        bet.beton === navigation.state.params.localteam.id
+                          ? navigation.state.params.localteam.name
+                          : navigation.state.params.visitorteam.name
+                      }
+                    />
+                  ))}
               </>
             )}
           </View>
@@ -213,5 +240,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  {getBetsByMatch},
+  {getBetsByMatch, placeBet},
 )(BetOnWin);

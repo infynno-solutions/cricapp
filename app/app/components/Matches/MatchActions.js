@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {Config} from '../../common';
+import {Alert} from 'react-native';
 
 export const fetchMatches = () => {
   return dispatch => {
@@ -62,6 +63,31 @@ export const getBetsByMatch = id => {
         dispatch({
           type: 'BETS_BY_MATCH_FETCH_FAILURE',
           payload: err.response.data,
+        });
+      });
+  };
+};
+
+export const placeBet = bet => {
+  return dispatch => {
+    dispatch({type: 'PLACE_BET_PENDING'});
+    axios
+      .post(`${Config.apiUrl}/bet`, bet)
+      .then(res => {
+        // console.log(res);
+        if (res.data.success === true) {
+          dispatch({type: 'PLACE_BET_SUCCESS'});
+          dispatch(getBetsByMatch(bet.match_id));
+          Alert.alert('Success', res.data.message);
+        } else {
+          Alert.alert('Error', res.data.message);
+          dispatch({type: 'PLACE_BET_FAILURE'});
+        }
+      })
+      .catch(err => {
+        dispatch({
+          type: 'PLACE_BET_FAILURE',
+          message: err.response.data.message,
         });
       });
   };

@@ -34,7 +34,7 @@ export default function MatchReducers(state = initialState, action) {
     case 'BETS_BY_MATCH_FETCH_PENDING':
       return {
         ...state,
-        getBetsByMatch: {loading: false, error: false, message: ''},
+        getBetsByMatch: {loading: true, error: false, message: ''},
       };
     case 'BETS_BY_MATCH_FETCH_SUCCESS':
       return {

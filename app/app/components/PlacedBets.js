@@ -3,30 +3,25 @@ import {View, Text, StyleSheet} from 'react-native';
 import {Config} from '../common';
 import moment from 'moment';
 
-const PlacedBets = bet => {
-  console.log(bet);
+const PlacedBets = ({bet, placedOn}) => {
   return (
     <View style={styles.container}>
       <View style={styles.betWrapper}>
         <View style={styles.betInfo}>
-          <Text style={styles.betId}>BET ID #{bet.bet._id}</Text>
-          <Text>${bet.bet.amount}</Text>
+          <Text style={styles.betId}>BET ID #{bet._id}</Text>
+          <Text>${bet.amount}</Text>
         </View>
         <View style={styles.betInfo}>
-          <Text>{moment(bet.bet.createdAt).format('DD/MM/YYYY hh:m A')}</Text>
-          <Text>Result Pending</Text>
+          <Text>{moment(bet.createdAt).format('DD/MM/YYYY hh:m A')}</Text>
+          <Text>{bet.result ? 'Finished' : 'Pending'}</Text>
         </View>
       </View>
-      {/* <View style={styles.transactionWrapper}>
+      <View style={styles.transactionWrapper}>
         <View style={styles.betInfo}>
-          <Text style={styles.betId}>TRANSACTION ID</Text>
-          <Text>#1234</Text>
+          <Text style={styles.betId}>Placed On</Text>
+          <Text>{placedOn}</Text>
         </View>
-        <View style={styles.betInfo}>
-          <Text style={styles.betId}>Odds</Text>
-          <Text>0.30</Text>
-        </View>
-      </View> */}
+      </View>
     </View>
   );
 };

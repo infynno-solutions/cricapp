@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
   },
   matchName: {
     fontSize: 16,
+    textAlign: 'center',
   },
 });
 
