@@ -14,10 +14,16 @@ import Login from '../components/Auth/Login';
 import ForgotPassword from '../components/Auth/ForgotPassword';
 import Register from '../components/Auth/Register';
 
-// Match
+// Bets
+import MyBets from '../components/Bets/MyBets';
 import Contests from '../screens/Contests';
-import BetOnWin from '../components/Matches/BetOnWin';
+import BetOnWin from '../components/Bets/BetOnWin';
+
+// Matches
 import LiveScore from '../components/Matches/LiveScore';
+
+// Wallet
+import Wallet from '../components/Wallet/Wallet';
 
 // Profile
 import Profile from '../components/Profile/Profile';
@@ -27,29 +33,55 @@ const HomeStack = createStackNavigator(
   {
     navigationOptions: ({navigation}) => ({
       tabBarVisible: navigation.state.index < 1,
-      tabBarLabel: 'Home',
+      tabBarLabel: 'HOME',
       tabBarIcon: ({tintColor}) => (
-        <Icon name="home-variant-outline" size={24} color={tintColor} />
+        <Icon name="home" size={24} color={tintColor} />
       ),
     }),
   },
 );
 
-const ProfileStack = createStackNavigator(
+const ContestsStack = createStackNavigator(
+  {MyBets},
+  {
+    navigationOptions: ({navigation}) => ({
+      tabBarVisible: navigation.state.index < 1,
+      tabBarLabel: 'MY BETS',
+      tabBarIcon: ({tintColor}) => (
+        <Icon name="ticket" size={24} color={tintColor} />
+      ),
+    }),
+  },
+);
+
+const WalletStack = createStackNavigator(
+  {Wallet},
+  {
+    navigationOptions: ({navigation}) => ({
+      tabBarVisible: navigation.state.index < 1,
+      tabBarLabel: 'WALLET',
+      tabBarIcon: ({tintColor}) => (
+        <Icon name="wallet" size={24} color={tintColor} />
+      ),
+    }),
+  },
+);
+
+const MoreStack = createStackNavigator(
   {Profile, Contests, LiveScore},
   {
     navigationOptions: ({navigation}) => ({
       tabBarVisible: navigation.state.index < 1,
-      tabBarLabel: 'Profile',
+      tabBarLabel: 'MORE',
       tabBarIcon: ({tintColor}) => (
-        <Icon name="account-outline" size={24} color={tintColor} />
+        <Icon name="dots-vertical" size={24} color={tintColor} />
       ),
     }),
   },
 );
 
 const AppStack = createBottomTabNavigator(
-  {HomeStack, ProfileStack},
+  {HomeStack, ContestsStack, WalletStack, MoreStack},
   {
     tabBarOptions: {
       activeTintColor: Config.primaryColor,

@@ -1,7 +1,7 @@
 export default {
   apiUrl: 'http://10.0.2.2:3000',
-  primaryColor: '#009145',
-  accentColor: '#fdd003',
+  primaryColor: '#c0392b',
+  accentColor: '#e74c3c',
   highlightColor: '#27397e',
   backgroundColor: '#f4f9fb',
   errorColor: '#e74c3c',
