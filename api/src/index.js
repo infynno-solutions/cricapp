@@ -8,6 +8,7 @@ const MongoStore = require("connect-mongo")(session);
 
 const userController = require("./users/user.controller");
 const betController = require("./bets/bet.controller");
+const walletController = require("./wallet/wallet.controller");
 
 dotenv.config({ path: ".env" });
 
@@ -52,12 +53,18 @@ app.get("/", (req, res) => {
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Auth
 app.post("/login", userController.loginUser);
 app.post("/register", userController.registerUser);
 
+// Bet
 app.post("/bet", betController.placeBet);
 app.get("/bet", betController.getBets);
 app.get("/bet/match/:match_id", betController.getBetsByMatch);
+
+// Wallet
+app.post("/wallet/add-cash", walletController.addCash);
+app.get("/wallet/balance", walletController.getBalance);
 
 app.listen(process.env.PORT, () =>
   console.log(`App is running on ${process.env.APP_URL}:${process.env.PORT}`)

@@ -18,7 +18,8 @@ const userSchema = new mongoose.Schema(
         "Email is already taken."
       ]
     },
-    password: String
+    password: String,
+    balance: { type: Number, default: 0 }
   },
   { timestamps: true }
 );

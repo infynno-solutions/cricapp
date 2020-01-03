@@ -1,4 +1,5 @@
 const Bet = require("./bet.model");
+const User = require("../users/user.model");
 const { joiErrors, mongooseErrors } = require("../utils/errors");
 const { ExtractJwt } = require("passport-jwt");
 
@@ -20,6 +21,20 @@ exports.placeBet = async (req, res) => {
 
   const bet = new Bet(betInfo);
 
+  const user = await User.findById(req.user.id);
+  const oldBalance = user.balance;
+
+  if (oldBalance < betInfo.amount) {
+    return res.status(401).json({
+      success: false,
+      message: "You don't have enough cash. Please recharge your wallet."
+    });
+  }
+
+  const newBalance = oldBalance - betInfo.amount;
+
+  await User.updateOne({ balance: newBalance });
+
   bet.save(err => {
     if (err) {
       return res.status(200).json({
@@ -32,7 +47,8 @@ exports.placeBet = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "Bet placed successfully",
-      bet: bet
+      bet: bet,
+      balance: newBalance
     });
   });
 };
