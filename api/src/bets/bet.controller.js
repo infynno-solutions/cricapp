@@ -1,7 +1,9 @@
 const Bet = require("./bet.model");
 const User = require("../users/user.model");
+const Team = require("../seeders/team.model");
 const { joiErrors, mongooseErrors } = require("../utils/errors");
 const { ExtractJwt } = require("passport-jwt");
+const fetch = require("isomorphic-fetch");
 
 /**
  * POST /bet
@@ -60,7 +62,19 @@ exports.placeBet = async (req, res) => {
  */
 exports.getBets = async (req, res) => {
   if (req.user) {
-    const bets = await Bet.find({ user: req.user.id });
+    let bets = await Bet.find({ user: req.user.id })
+      .sort("field -createdAt")
+      .lean();
+
+    await Promise.all(
+      bets.map(async bet => {
+        const fetchUrl = `https://cricket.sportmonks.com/api/v2.0/fixtures/${bet.match_id}?api_token=ArAX5LcbCkLst7I0uqZRiypcFYnXUHbc8JfVefHkqZlAs3vw3TaMx5MP74nW&include=localteam,visitorteam`;
+        const res = await fetch(fetchUrl);
+        const match = await res.json();
+        bet.match = match.data;
+      })
+    );
+
     return res.status(200).json({
       success: true,
       message: "Bets Found.",
