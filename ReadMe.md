@@ -1,11 +1,11 @@
 <h1 align="center">Cric Application</h1>
 
 - [x] User auth
-- [ ] Matches list
-- [ ] Bet on win
-- [ ] Wallet
+- [x] Matches list
+- [x] Bet on win
+- [x] Wallet
 - [ ] Fantasy 
-- [ ] Live scores
+- [x] Live scores
 - [ ] Leagues
 - [ ] Player info
 - [ ] Scrap data from api
