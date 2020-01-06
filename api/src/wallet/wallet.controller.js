@@ -71,3 +71,16 @@ exports.getWinnings = async (req, res) => {
     .status(200)
     .json({ success: true, message: "Winnings Found", amount: totalWon });
 };
+
+/**
+ * Get /history
+ */
+
+exports.getHistory = async (req, res) => {
+  const history = await Wallet.find({ user: req.user.id }).sort({
+    createdAt: "desc"
+  });
+  return res
+    .status(200)
+    .json({ success: true, message: "Wallet History.", history: history });
+};

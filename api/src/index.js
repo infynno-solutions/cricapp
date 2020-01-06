@@ -86,6 +86,11 @@ app.get(
   passportConfig.isAuthenticated,
   walletController.getWinnings
 );
+app.get(
+  "/wallet/history",
+  passportConfig.isAuthenticated,
+  walletController.getHistory
+);
 
 app.listen(process.env.PORT, () =>
   console.log(`App is running on ${process.env.APP_URL}:${process.env.PORT}`)
