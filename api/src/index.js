@@ -58,13 +58,25 @@ app.post("/login", userController.loginUser);
 app.post("/register", userController.registerUser);
 
 // Bet
-app.post("/bet", betController.placeBet);
-app.get("/bet", betController.getBets);
-app.get("/bet/match/:match_id", betController.getBetsByMatch);
+app.post("/bet", passportConfig.isAuthenticated, betController.placeBet);
+app.get("/bet", passportConfig.isAuthenticated, betController.getBets);
+app.get(
+  "/bet/match/:match_id",
+  passportConfig.isAuthenticated,
+  betController.getBetsByMatch
+);
 
 // Wallet
-app.post("/wallet/add-cash", walletController.addCash);
-app.get("/wallet/balance", walletController.getBalance);
+app.post(
+  "/wallet/add-cash",
+  passportConfig.isAuthenticated,
+  walletController.addCash
+);
+app.get(
+  "/wallet/balance",
+  passportConfig.isAuthenticated,
+  walletController.getBalance
+);
 
 app.listen(process.env.PORT, () =>
   console.log(`App is running on ${process.env.APP_URL}:${process.env.PORT}`)

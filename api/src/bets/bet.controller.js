@@ -21,6 +21,16 @@ exports.placeBet = async (req, res) => {
     user: req.user
   };
 
+  const currentDateTime = new Date();
+
+  // Check if match is already started.
+  if (new Date(betInfo.date) < currentDateTime) {
+    return res.status(401).json({
+      success: false,
+      message: "Match already started you can't bet now."
+    });
+  }
+
   const bet = new Bet(betInfo);
 
   const user = await User.findById(req.user.id);
@@ -61,31 +71,24 @@ exports.placeBet = async (req, res) => {
  * List bets of user.
  */
 exports.getBets = async (req, res) => {
-  if (req.user) {
-    let bets = await Bet.find({ user: req.user.id })
-      .sort("field -createdAt")
-      .lean();
+  let bets = await Bet.find({ user: req.user.id })
+    .sort("field -createdAt")
+    .lean();
 
-    await Promise.all(
-      bets.map(async bet => {
-        const fetchUrl = `https://cricket.sportmonks.com/api/v2.0/fixtures/${bet.match_id}?api_token=ArAX5LcbCkLst7I0uqZRiypcFYnXUHbc8JfVefHkqZlAs3vw3TaMx5MP74nW&include=localteam,visitorteam`;
-        const res = await fetch(fetchUrl);
-        const match = await res.json();
-        bet.match = match.data;
-      })
-    );
+  await Promise.all(
+    bets.map(async bet => {
+      const fetchUrl = `https://cricket.sportmonks.com/api/v2.0/fixtures/${bet.match_id}?api_token=ArAX5LcbCkLst7I0uqZRiypcFYnXUHbc8JfVefHkqZlAs3vw3TaMx5MP74nW&include=localteam,visitorteam`;
+      const res = await fetch(fetchUrl);
+      const match = await res.json();
+      bet.match = match.data;
+    })
+  );
 
-    return res.status(200).json({
-      success: true,
-      message: "Bets Found.",
-      bets: bets
-    });
-  } else {
-    return res.status(500).json({
-      success: false,
-      message: "User not found."
-    });
-  }
+  return res.status(200).json({
+    success: true,
+    message: "Bets Found.",
+    bets: bets
+  });
 };
 
 /**
@@ -95,22 +98,13 @@ exports.getBets = async (req, res) => {
  */
 
 exports.getBetsByMatch = async (req, res) => {
-  // console.log(req.params);
-  // process.exit();
-  if (req.user) {
-    const bets = await Bet.find({
-      user: req.user.id,
-      match_id: req.params.match_id
-    }).sort({ createdAt: "desc" });
-    return res.status(200).json({
-      success: true,
-      message: "Bets Found.",
-      bets: bets
-    });
-  } else {
-    return res.status(500).json({
-      success: false,
-      message: "User not found."
-    });
-  }
+  const bets = await Bet.find({
+    user: req.user.id,
+    match_id: req.params.match_id
+  }).sort({ createdAt: "desc" });
+  return res.status(200).json({
+    success: true,
+    message: "Bets Found.",
+    bets: bets
+  });
 };
