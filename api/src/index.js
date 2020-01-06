@@ -10,6 +10,8 @@ const userController = require("./users/user.controller");
 const betController = require("./bets/bet.controller");
 const walletController = require("./wallet/wallet.controller");
 
+const betResult = require("./cron/betresult");
+
 dotenv.config({ path: ".env" });
 
 const passportConfig = require("./config/passport");
@@ -27,6 +29,8 @@ mongoose.connection.on("error", err => {
   console.log("MongoDB connection error. Please make sure MongoDB is running.");
   process.exit();
 });
+
+betResult();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

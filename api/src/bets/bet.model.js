@@ -12,6 +12,11 @@ const betSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true
+    },
+    status: {
+      type: String,
+      enum: ["pending", "failed", "success"],
+      required: true
     }
   },
   {

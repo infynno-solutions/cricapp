@@ -1,5 +1,6 @@
 const Bet = require("./bet.model");
 const User = require("../users/user.model");
+const Wallet = require("../wallet/wallet.model");
 const Team = require("../seeders/team.model");
 const { joiErrors, mongooseErrors } = require("../utils/errors");
 const { ExtractJwt } = require("passport-jwt");
@@ -18,14 +19,15 @@ exports.placeBet = async (req, res) => {
     amount: req.body.amount,
     beton: req.body.beton,
     match_id: req.body.match_id,
-    user: req.user
+    user: req.user,
+    status: "pending"
   };
 
   const currentDateTime = new Date();
 
   // Check if match is already started.
   if (new Date(betInfo.date) < currentDateTime) {
-    return res.status(401).json({
+    return res.status(200).json({
       success: false,
       message: "Match already started you can't bet now."
     });
@@ -37,10 +39,25 @@ exports.placeBet = async (req, res) => {
   const oldBalance = user.balance;
 
   if (oldBalance < betInfo.amount) {
-    return res.status(401).json({
+    return res.status(200).json({
       success: false,
       message: "You don't have enough cash. Please recharge your wallet."
     });
+  }
+
+  // Create transaction in wallet
+
+  const transaction = new Wallet({
+    transaction_type: "joined",
+    amount: betInfo.amount,
+    user: req.user,
+    status: "success"
+  });
+
+  const addTransaction = await transaction.save();
+
+  if (!addTransaction) {
+    return res.status(400).json({ message: "Error occured." });
   }
 
   const newBalance = oldBalance - betInfo.amount;

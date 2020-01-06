@@ -14,12 +14,7 @@ exports.addCash = async (req, res) => {
     user: req.user,
     status: "success"
   };
-  if (!req.user) {
-    return res.status(400).json({
-      success: false,
-      message: "Unauthorized."
-    });
-  }
+
   const addCash = new Wallet(cashInfo);
   addCash.save(async err => {
     if (err) {
@@ -51,13 +46,6 @@ exports.addCash = async (req, res) => {
  */
 
 exports.getBalance = async (req, res) => {
-  if (!req.user) {
-    return res.status(400).json({
-      success: false,
-      message: "Unauthorized."
-    });
-  }
-
   const user = await User.findById(req.user.id);
 
   return res.status(200).json({
