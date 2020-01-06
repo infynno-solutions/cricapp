@@ -54,3 +54,20 @@ exports.getBalance = async (req, res) => {
     balance: user.balance
   });
 };
+
+/**
+ * Get /winnings
+ */
+exports.getWinnings = async (req, res) => {
+  const winnings = await Wallet.find({
+    user: req.user.id,
+    transaction_type: "winning"
+  });
+  let totalWon = 0;
+  winnings.map(win => {
+    totalWon = totalWon + win.amount;
+  });
+  return res
+    .status(200)
+    .json({ success: true, message: "Winnings Found", amount: totalWon });
+};
