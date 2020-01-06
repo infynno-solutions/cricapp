@@ -18,3 +18,24 @@ export const fetchBalance = () => {
       });
   };
 };
+
+export const fetchTotalWinnings = () => {
+  return dispatch => {
+    dispatch({type: 'FETCH_TOTALWINNING_PENDING'});
+
+    axios
+      .get(`${Config.apiUrl}/wallet/winnings`)
+      .then(res => {
+        dispatch({
+          type: 'FETCH_TOTALWINNING_SUCCESS',
+          amount: res.data.amount,
+        });
+      })
+      .catch(err => {
+        dispatch({
+          type: 'FETCH_TOTALWINNING_FAILURE',
+          message: err.response.data.message,
+        });
+      });
+  };
+};

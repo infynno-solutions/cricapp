@@ -10,7 +10,7 @@ import {
 import {Config} from '../../common';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {connect} from 'react-redux';
-import {fetchBalance} from './WalletActions';
+import {fetchBalance, fetchTotalWinnings} from './WalletActions';
 
 class Wallet extends Component {
   static navigationOptions = () => ({
@@ -26,10 +26,15 @@ class Wallet extends Component {
 
   componentDidMount() {
     this.fetchBalance();
+    this.fetchTotalWinnings();
   }
 
   fetchBalance = async () => {
     await this.props.fetchBalance();
+  };
+
+  fetchTotalWinnings = async () => {
+    await this.props.fetchTotalWinnings();
   };
 
   render() {
@@ -40,7 +45,10 @@ class Wallet extends Component {
         refreshControl={
           <RefreshControl
             refreshing={state.isLoading}
-            onRefresh={() => this.fetchBalance()}
+            onRefresh={async () => {
+              await this.fetchBalance();
+              await this.fetchTotalWinnings();
+            }}
           />
         }
         style={styles.walletWrapper}>
@@ -52,7 +60,7 @@ class Wallet extends Component {
               <Icon name="currency-inr" size={64} color={Config.primaryColor} />
               <Text style={styles.balance}>{state.balance}</Text>
             </View>
-            <Text style={styles.balanceText}>YOUR BALANCE</Text>
+            <Text style={styles.balanceText}>YOUR WALLET BALANCE</Text>
             <View style={styles.winningsWrapper}>
               <View style={styles.iconBg}>
                 <Icon name="seal" size={32} color="#fff" />
@@ -67,7 +75,9 @@ class Wallet extends Component {
                   size={24}
                   color={Config.primaryColor}
                 />
-                <Text style={styles.winningsMoney}>0</Text>
+                <Text style={styles.winningsMoney}>
+                  {state.fetchWinnings.amount}
+                </Text>
               </View>
             </View>
           </>
@@ -131,5 +141,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  {fetchBalance},
+  {fetchBalance, fetchTotalWinnings},
 )(Wallet);
