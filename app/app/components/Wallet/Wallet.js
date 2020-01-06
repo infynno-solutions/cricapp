@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   ScrollView,
   RefreshControl,
+  TouchableOpacity,
 } from 'react-native';
 import {Config} from '../../common';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -38,7 +39,7 @@ class Wallet extends Component {
   };
 
   render() {
-    const {state} = this.props;
+    const {state, navigation} = this.props;
 
     return (
       <ScrollView
@@ -80,6 +81,17 @@ class Wallet extends Component {
                 </Text>
               </View>
             </View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('WalletHistory')}
+              style={styles.winningsWrapper}>
+              <View style={styles.iconBg}>
+                <Icon name="history" size={32} color="#fff" />
+              </View>
+              <View style={styles.winningsContent}>
+                <Text style={styles.title}>Transaction History</Text>
+                <Text>Where & How much you Spent? Know all</Text>
+              </View>
+            </TouchableOpacity>
           </>
         )}
       </ScrollView>

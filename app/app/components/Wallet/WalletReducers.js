@@ -9,6 +9,12 @@ const initialState = {
     message: '',
     amount: null,
   },
+  walletHistory: {
+    loading: false,
+    error: false,
+    message: '',
+    history: null,
+  },
 };
 
 export default function WalletReducers(state = initialState, action) {
@@ -48,6 +54,31 @@ export default function WalletReducers(state = initialState, action) {
           error: true,
           message: action.message,
           amount: null,
+        },
+      };
+    case 'FETCH_HISTORY_PENDING':
+      return {
+        ...state,
+        walletHistory: {loading: true, error: false, message: ''},
+      };
+    case 'FETCH_HISTORY_SUCCESS':
+      return {
+        ...state,
+        walletHistory: {
+          loading: false,
+          error: false,
+          message: '',
+          history: action.history,
+        },
+      };
+    case 'FETCH_HISTORY_FAILURE':
+      return {
+        ...state,
+        walletHistory: {
+          loading: false,
+          error: true,
+          message: action.message,
+          history: null,
         },
       };
     default:

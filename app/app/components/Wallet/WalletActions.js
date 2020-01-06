@@ -39,3 +39,24 @@ export const fetchTotalWinnings = () => {
       });
   };
 };
+
+export const fetchHistory = () => {
+  return dispatch => {
+    dispatch({type: 'FETCH_HISTORY_PENDING'});
+
+    axios
+      .get(`${Config.apiUrl}/wallet/history`)
+      .then(res => {
+        dispatch({
+          type: 'FETCH_HISTORY_SUCCESS',
+          history: res.data.history,
+        });
+      })
+      .catch(err => {
+        dispatch({
+          type: 'FETCH_HISTORY_FAILURE',
+          message: err.response.data.message,
+        });
+      });
+  };
+};

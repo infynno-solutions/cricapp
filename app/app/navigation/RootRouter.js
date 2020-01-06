@@ -24,6 +24,7 @@ import LiveScore from '../components/Matches/LiveScore';
 
 // Wallet
 import Wallet from '../components/Wallet/Wallet';
+import WalletHistory from '../components/Wallet/WalletHistory';
 
 // Profile
 import Profile from '../components/Profile/Profile';
@@ -55,7 +56,7 @@ const ContestsStack = createStackNavigator(
 );
 
 const WalletStack = createStackNavigator(
-  {Wallet},
+  {Wallet, WalletHistory},
   {
     navigationOptions: ({navigation}) => ({
       tabBarVisible: navigation.state.index < 1,
