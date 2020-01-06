@@ -9,6 +9,12 @@ const initialState = {
     error: false,
     message: '',
   },
+  placeBet: {
+    loading: false,
+    bet: null,
+    error: false,
+    message: '',
+  },
 };
 
 export default function BetsReducers(state = initialState, action) {
@@ -50,6 +56,26 @@ export default function BetsReducers(state = initialState, action) {
       return {
         ...state,
         getBetsByMatch: {loading: false, error: true, message: action.message},
+      };
+    case 'PLACE_BET_PENDING':
+      return {
+        ...state,
+        placeBet: {loading: true, error: false, message: '', bet: null},
+      };
+    case 'PLACE_BET_SUCCESS':
+      return {
+        ...state,
+        placeBet: {loading: false, error: false, message: '', bet: action.bet},
+      };
+    case 'PLACE_BET_FAILURE':
+      return {
+        ...state,
+        placeBet: {
+          loading: false,
+          error: true,
+          message: action.message,
+          bet: null,
+        },
       };
     default:
       return {...state};

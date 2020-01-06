@@ -48,7 +48,7 @@ class MyBets extends Component {
         ) : (
           <View style={styles.bets}>
             {state.bets &&
-              state.bets.map(bet => <MyPlacedBets key={bet.id} bet={bet} />)}
+              state.bets.map(bet => <MyPlacedBets key={bet._id} bet={bet} />)}
           </View>
         )}
       </ScrollView>

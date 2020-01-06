@@ -23,7 +23,8 @@ class MatchCard extends Component {
               {`${match.localteam.code} vs ${match.visitorteam.code}`}
             </Text>
             <Text style={styles.time}>
-              {moment(match.starting_at)
+              {moment
+                .utc(match.starting_at)
                 .startOf('hour')
                 .fromNow()}
             </Text>

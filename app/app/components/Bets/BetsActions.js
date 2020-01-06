@@ -54,14 +54,13 @@ export const placeBet = bet => {
     axios
       .post(`${Config.apiUrl}/bet`, bet)
       .then(res => {
-        // console.log(res);
         if (res.data.success === true) {
           dispatch({type: 'PLACE_BET_SUCCESS'});
           dispatch(getBetsByMatch(bet.match_id));
           Alert.alert('Success', res.data.message);
         } else {
-          Alert.alert('Error', res.data.message);
           dispatch({type: 'PLACE_BET_FAILURE'});
+          Alert.alert('Error', res.data.message);
         }
       })
       .catch(err => {

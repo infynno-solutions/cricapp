@@ -149,7 +149,7 @@ class BetOnWin extends Component {
                   state.getBetsByMatch.bets.map(bet => (
                     <PlacedBets
                       bet={bet}
-                      key={bet.id}
+                      key={bet._id}
                       placedOn={
                         bet.beton === navigation.state.params.localteam.id
                           ? navigation.state.params.localteam.name
