@@ -60,6 +60,7 @@ app.use(passport.session());
 // Auth
 app.post("/login", userController.loginUser);
 app.post("/register", userController.registerUser);
+app.get("/user/verify/:token", userController.verifyEmail);
 
 // Bet
 app.post("/bet", passportConfig.isAuthenticated, betController.placeBet);

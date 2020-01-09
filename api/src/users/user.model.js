@@ -19,7 +19,9 @@ const userSchema = new mongoose.Schema(
       ]
     },
     password: String,
-    balance: { type: Number, default: 0 }
+    balance: { type: Number, default: 0 },
+    emailVerificationToken: String,
+    emailVerified: { type: Boolean, default: false }
   },
   { timestamps: true }
 );
