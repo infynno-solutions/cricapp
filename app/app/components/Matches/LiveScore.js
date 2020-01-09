@@ -68,7 +68,12 @@ class LiveScore extends Component {
                         navigation.state.params.starting_at,
                       ).format('ddd, MMM DD hh:mm A')}`}
                     </Text>
-                    <CountDown until={seconds} size={20} />
+                    <CountDown
+                      digitStyle={styles.countDownBG}
+                      digitTxtStyle={styles.countDownText}
+                      until={seconds}
+                      size={20}
+                    />
                   </>
                 ) : (
                   <>
@@ -159,6 +164,10 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     elevation: 5,
   },
+  countDownBG: {
+    backgroundColor: Config.successColor,
+  },
+  countDownText: {color: '#fff'},
 });
 const mapStateToProps = state => {
   return {
