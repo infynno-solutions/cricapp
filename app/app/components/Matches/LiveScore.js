@@ -16,7 +16,7 @@ import Batting from './Batting';
 import Bowling from './Bowling';
 import Accordion from '../Accordion';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import CountDown from 'react-native-countdown-component';
 class LiveScore extends Component {
   static navigationOptions = ({navigation}) => ({
     title: `${navigation.state.params.localteam.code} vs ${
@@ -45,7 +45,14 @@ class LiveScore extends Component {
 
   render() {
     const {state, navigation} = this.props;
-
+    const dateDiff = moment.duration(
+      moment(navigation.state.params.starting_at).diff(moment(new Date())),
+    );
+    const seconds =
+      dateDiff.asHours() * 60 * 60 +
+      dateDiff.minutes() * 60 +
+      dateDiff.seconds();
+    // console.warn(seconds);
     return (
       <View style={styles.scoreboard}>
         <ScrollView>
@@ -61,6 +68,7 @@ class LiveScore extends Component {
                         navigation.state.params.starting_at,
                       ).format('ddd, MMM DD hh:mm A')}`}
                     </Text>
+                    <CountDown until={seconds} size={20} />
                   </>
                 ) : (
                   <>
