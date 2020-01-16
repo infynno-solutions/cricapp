@@ -10,6 +10,7 @@ import {Config} from '../../common';
 import {connect} from 'react-redux';
 import {getBets} from './BetsActions';
 import MyPlacedBets from './MyPlacedBets';
+import {withNavigationFocus} from 'react-navigation';
 
 class MyBets extends Component {
   static navigationOptions = ({navigation}) => ({
@@ -25,6 +26,12 @@ class MyBets extends Component {
 
   componentDidMount() {
     this.getBets();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.isFocused !== this.props.isFocused) {
+      this.getBets();
+    }
   }
 
   getBets = async () => {
@@ -43,14 +50,10 @@ class MyBets extends Component {
           />
         }
         style={styles.betsContainer}>
-        {state.isLoading ? (
-          <ActivityIndicator size="large" color={Config.primaryColor} />
-        ) : (
-          <View style={styles.bets}>
-            {state.bets &&
-              state.bets.map(bet => <MyPlacedBets key={bet._id} bet={bet} />)}
-          </View>
-        )}
+        <View style={styles.bets}>
+          {state.bets &&
+            state.bets.map(bet => <MyPlacedBets key={bet._id} bet={bet} />)}
+        </View>
       </ScrollView>
     );
   }
@@ -73,7 +76,9 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  {getBets},
-)(MyBets);
+export default withNavigationFocus(
+  connect(
+    mapStateToProps,
+    {getBets},
+  )(MyBets),
+);

@@ -2,10 +2,10 @@ import axios from 'axios';
 import {Config} from '../../common';
 
 export const fetchBalance = () => {
-  return dispatch => {
+  return async dispatch => {
     dispatch({type: 'FETCH_BALANCE_PENDING'});
 
-    axios
+    await axios
       .get(`${Config.apiUrl}/wallet/balance`)
       .then(res => {
         dispatch({type: 'FETCH_BALANCE_SUCCESS', balance: res.data.balance});
@@ -20,10 +20,10 @@ export const fetchBalance = () => {
 };
 
 export const fetchTotalWinnings = () => {
-  return dispatch => {
+  return async dispatch => {
     dispatch({type: 'FETCH_TOTALWINNING_PENDING'});
 
-    axios
+    await axios
       .get(`${Config.apiUrl}/wallet/winnings`)
       .then(res => {
         dispatch({
@@ -41,10 +41,10 @@ export const fetchTotalWinnings = () => {
 };
 
 export const fetchHistory = () => {
-  return dispatch => {
+  return async dispatch => {
     dispatch({type: 'FETCH_HISTORY_PENDING'});
 
-    axios
+    await axios
       .get(`${Config.apiUrl}/wallet/history`)
       .then(res => {
         dispatch({

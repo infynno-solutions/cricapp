@@ -40,29 +40,26 @@ class ExploreMatches extends Component {
     return (
       <View style={styles.homeContainer}>
         <CustomHeader title="CricApp" />
-        {state.isLoading ? (
-          <ActivityIndicator size="large" />
-        ) : (
-          <>
-            <AnimatedListView
-              data={state.matches}
-              keyExtractor={(item, index) => `matched-${item.id} || ${index}`}
-              renderItem={this.renderMatches}
-              refreshing={state.isLoading}
-              ListHeaderComponent={() => (
-                <View>
-                  <Text style={styles.sectionTitle}>Upcoming Matches</Text>
-                </View>
-              )}
-              refreshControl={
-                <RefreshControl
-                  refreshing={state.isLoading}
-                  onRefresh={() => this.fetchMatches()}
-                />
-              }
-            />
-          </>
-        )}
+
+        <>
+          <AnimatedListView
+            data={state.matches}
+            keyExtractor={(item, index) => `matched-${item.id} || ${index}`}
+            renderItem={this.renderMatches}
+            refreshing={state.isLoading}
+            ListHeaderComponent={() => (
+              <View>
+                <Text style={styles.sectionTitle}>Upcoming Matches</Text>
+              </View>
+            )}
+            refreshControl={
+              <RefreshControl
+                refreshing={state.isLoading}
+                onRefresh={() => this.fetchMatches()}
+              />
+            }
+          />
+        </>
       </View>
     );
   }

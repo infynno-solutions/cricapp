@@ -12,6 +12,7 @@ import {Config} from '../../common';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {connect} from 'react-redux';
 import {fetchBalance, fetchTotalWinnings} from './WalletActions';
+import {withNavigationFocus} from 'react-navigation';
 
 class Wallet extends Component {
   static navigationOptions = () => ({
@@ -28,6 +29,13 @@ class Wallet extends Component {
   componentDidMount() {
     this.fetchBalance();
     this.fetchTotalWinnings();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.isFocused !== this.props.isFocused) {
+      this.fetchBalance();
+      this.fetchTotalWinnings();
+    }
   }
 
   fetchBalance = async () => {
@@ -53,47 +61,39 @@ class Wallet extends Component {
           />
         }
         style={styles.walletWrapper}>
-        {state.isLoading ? (
-          <ActivityIndicator color={Config.primaryColor} size="large" />
-        ) : (
-          <>
-            <View style={styles.currencyIcon}>
-              <Icon name="currency-inr" size={64} color={Config.primaryColor} />
-              <Text style={styles.balance}>{state.balance}</Text>
+        <>
+          <View style={styles.currencyIcon}>
+            <Icon name="currency-inr" size={64} color={Config.primaryColor} />
+            <Text style={styles.balance}>{state.balance}</Text>
+          </View>
+          <Text style={styles.balanceText}>YOUR WALLET BALANCE</Text>
+          <View style={styles.winningsWrapper}>
+            <View style={styles.iconBg}>
+              <Icon name="seal" size={32} color="#fff" />
             </View>
-            <Text style={styles.balanceText}>YOUR WALLET BALANCE</Text>
-            <View style={styles.winningsWrapper}>
-              <View style={styles.iconBg}>
-                <Icon name="seal" size={32} color="#fff" />
-              </View>
-              <View style={styles.winningsContent}>
-                <Text style={styles.title}>Your Winnings</Text>
-                <Text>The Money You Won</Text>
-              </View>
-              <View style={styles.moneyWrapper}>
-                <Icon
-                  name="currency-inr"
-                  size={24}
-                  color={Config.primaryColor}
-                />
-                <Text style={styles.winningsMoney}>
-                  {state.fetchWinnings.amount}
-                </Text>
-              </View>
+            <View style={styles.winningsContent}>
+              <Text style={styles.title}>Your Winnings</Text>
+              <Text>The Money You Won</Text>
             </View>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('WalletHistory')}
-              style={styles.winningsWrapper}>
-              <View style={styles.iconBg}>
-                <Icon name="history" size={32} color="#fff" />
-              </View>
-              <View style={styles.winningsContent}>
-                <Text style={styles.title}>Transaction History</Text>
-                <Text>Where & How much you Spent? Know all</Text>
-              </View>
-            </TouchableOpacity>
-          </>
-        )}
+            <View style={styles.moneyWrapper}>
+              <Icon name="currency-inr" size={24} color={Config.primaryColor} />
+              <Text style={styles.winningsMoney}>
+                {state.fetchWinnings.amount}
+              </Text>
+            </View>
+          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('WalletHistory')}
+            style={styles.winningsWrapper}>
+            <View style={styles.iconBg}>
+              <Icon name="history" size={32} color="#fff" />
+            </View>
+            <View style={styles.winningsContent}>
+              <Text style={styles.title}>Transaction History</Text>
+              <Text>Where & How much you Spent? Know all</Text>
+            </View>
+          </TouchableOpacity>
+        </>
       </ScrollView>
     );
   }
@@ -151,7 +151,9 @@ const mapStateToProps = state => {
   return {state: state.WalletReducers};
 };
 
-export default connect(
-  mapStateToProps,
-  {fetchBalance, fetchTotalWinnings},
-)(Wallet);
+export default withNavigationFocus(
+  connect(
+    mapStateToProps,
+    {fetchBalance, fetchTotalWinnings},
+  )(Wallet),
+);

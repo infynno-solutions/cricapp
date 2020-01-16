@@ -41,19 +41,16 @@ class WalletHistory extends Component {
             onRefresh={async () => await this.fetchHistory()}
           />
         }>
-        {state.walletHistory.loading ? (
-          <ActivityIndicator size="large" color={Config.primaryColor} />
-        ) : (
-          <>
-            {state.walletHistory.history !== null &&
-              state.walletHistory.history.map(transaction => (
-                <TransactionCard
-                  key={transaction._id}
-                  transaction={transaction}
-                />
-              ))}
-          </>
-        )}
+        <>
+          {state.walletHistory.history &&
+            state.walletHistory.history !== null &&
+            state.walletHistory.history.map(transaction => (
+              <TransactionCard
+                key={transaction._id}
+                transaction={transaction}
+              />
+            ))}
+        </>
       </ScrollView>
     );
   }

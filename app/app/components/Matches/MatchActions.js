@@ -7,10 +7,10 @@ export const fetchMatches = () => {
   const endOn = new Date().setDate(oneWeek);
   const endDate = new Date(endOn).toJSON().slice(0, 10);
 
-  return dispatch => {
+  return async dispatch => {
     dispatch({type: 'MATCHS_FETCH_PENDING'});
 
-    axios
+    await axios
       .get(
         `https://cricket.sportmonks.com/api/v2.0/fixtures?api_token=${
           Config.apiKey

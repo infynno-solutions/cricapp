@@ -3,9 +3,9 @@ import {Config} from '../../common';
 import {Alert} from 'react-native';
 
 export const getBets = () => {
-  return dispatch => {
+  return async dispatch => {
     dispatch({type: 'MYBETS_FETCH_PENDING'});
-    axios
+    await axios
       .get(`${Config.apiUrl}/bet`)
       .then(res => {
         if (res.data.success === true) {
