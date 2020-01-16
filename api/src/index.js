@@ -5,6 +5,8 @@ const dotenv = require("dotenv");
 const passport = require("passport");
 const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
+const winston = require("winston");
+const expressWinston = require("express-winston");
 
 const userController = require("./users/user.controller");
 const betController = require("./bets/bet.controller");
@@ -48,6 +50,30 @@ app.use(
 );
 
 app.disable("x-powered-by");
+
+// Express logging using winston
+const date = `${new Date().getFullYear()}-${new Date().getMonth() +
+  1}-${new Date().getDate()}`;
+
+app.use(
+  expressWinston.logger({
+    transports: [
+      new winston.transports.File({
+        filename: `logs/error-${date}.log`,
+        level: "error"
+      }),
+      new winston.transports.File({ filename: `logs/combined-${date}.log` })
+    ],
+    format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.json()
+    ),
+    meta: true,
+    msg: "HTTP {{req.method}} {{req.url}}",
+    expressFormat: true,
+    colorize: true
+  })
+);
 
 app.get("/", (req, res) => {
   res.status(200).send("Hello");
@@ -93,7 +119,9 @@ app.get(
   walletController.getHistory
 );
 
-app.listen(process.env.PORT, () =>
-  console.log(`App is running on ${process.env.APP_URL}:${process.env.PORT}`)
+app.listen(
+  process.env.PORT
+  // , () =>
+  // console.log(`App is running on ${process.env.APP_URL}:${process.env.PORT}`)
 );
 module.exports = app;
