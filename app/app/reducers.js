@@ -6,6 +6,7 @@ import AuthReducers from './components/Auth/AuthReducers';
 import MatchReducers from './components/Matches/MatchReducers';
 import BetsReducers from './components/Bets/BetsReducers';
 import WalletReducers from './components/Wallet/WalletReducers';
+import ProfileReducers from './components/Profile/ProfileReducers';
 
 const config = {
   key: 'root',
@@ -18,6 +19,7 @@ const rootReducer = persistCombineReducers(config, {
   MatchReducers,
   BetsReducers,
   WalletReducers,
+  ProfileReducers,
 });
 
 export default rootReducer;
