@@ -87,6 +87,7 @@ app.use(passport.session());
 app.post("/login", userController.loginUser);
 app.post("/register", userController.registerUser);
 app.get("/user/verify/:token", userController.verifyEmail);
+app.get("/user/profile", userController.userProfile);
 
 // Bet
 app.post("/bet", passportConfig.isAuthenticated, betController.placeBet);

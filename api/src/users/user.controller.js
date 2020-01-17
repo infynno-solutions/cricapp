@@ -1,4 +1,5 @@
 const User = require("./user.model");
+const Wallet = require("../wallet/wallet.model");
 const { signUp, signIn } = require("./user.validator");
 const { joiErrors, mongooseErrors } = require("../utils/errors");
 const passport = require("passport");
@@ -156,5 +157,33 @@ exports.verifyEmail = async (req, res) => {
   return res.status(200).json({
     success: true,
     message: "Email verified sucessfully."
+  });
+};
+
+/**
+ * GET /user/profile
+ * Get logged in user's profile
+ */
+
+exports.userProfile = async (req, res) => {
+  const user = req.user;
+  const betsWon = await Wallet.find({
+    user: user._id,
+    transaction_type: "winning"
+  });
+  const betsPlaced = await Wallet.find({
+    user: user._id,
+    transaction_type: "joined"
+  });
+
+  const info = {
+    bets_won: betsWon.length,
+    total_bets: betsPlaced.length
+  };
+  return res.status(200).json({
+    success: true,
+    message: "User Found",
+    user: req.user,
+    info: info
   });
 };
