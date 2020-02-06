@@ -1,5 +1,5 @@
 <h1 align="center">Cric Application</h1>
-<p align="center">React native application for live cricket score and betting</p>
+<p align="center">A react native app to get live cricket score, scorecard, schedules of international and domestic cricket matches along with an option to bet on the winning team. This application uses Socre Monks api to fetch the match information and a node rest api for placing, retriving bets and transaction history.</p>
 
 |Login|Register|Upcoming Matches|
 |----|----|----|
