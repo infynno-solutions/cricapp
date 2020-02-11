@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, Image, Dimensions} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Config} from '../../common';
 
+const {width} = Dimensions.get('window');
 class AuthLoading extends Component {
   componentDidMount() {
     this.getStatus();
@@ -22,7 +23,8 @@ class AuthLoading extends Component {
   render() {
     return (
       <View style={styles.loadingContainer}>
-        <Text style={styles.logoText}>Cric App</Text>
+        <Image style={styles.logo} source={require('../../images/logo.png')} />
+        {/* <Text style={styles.logoText}>Cric App</Text> */}
       </View>
     );
   }
@@ -34,6 +36,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Config.primaryColor,
+  },
+  logo: {
+    width: width / 1.8,
+    height: width / 1.8,
   },
   logoText: {
     color: '#fff',
