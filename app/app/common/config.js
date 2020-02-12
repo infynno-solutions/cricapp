@@ -1,5 +1,5 @@
 export default {
-  apiUrl: 'http://10.0.2.2:3000',
+  apiUrl: 'http://ec2-3-6-120-180.ap-south-1.compute.amazonaws.com',
   primaryColor: '#c0392b',
   accentColor: '#e74c3c',
   highlightColor: '#27397e',
