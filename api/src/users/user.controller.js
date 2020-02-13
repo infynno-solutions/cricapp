@@ -21,7 +21,6 @@ exports.loginUser = async (req, res, next) => {
 
   if (validate.error) {
     res.status(400).json({
-      success: false,
       message: "Validation failed",
       errors: joiErrors(validate)
     });
@@ -30,32 +29,30 @@ exports.loginUser = async (req, res, next) => {
       if (err)
         return res
           .status(500)
-          .json({ success: false, message: "Somthing went wrong!" });
+          .json({ success: false, message: "Somthing went wrong" });
+
       if (!user) {
-        return res.status(200).json({
-          success: false,
+        return res.status(402).json({
           message: "Invalid username or password"
         });
       }
+
       if (user.emailVerified === false) {
-        return res.status(200).json({
-          success: false,
-          message: "Email verification pending."
+        return res.status(402).json({
+          message: "Please verify email"
         });
       }
+
       req.logIn(user, err => {
-        // console.log(user);
         if (err)
-          return res
-            .status(500)
-            .json({ success: false, message: "Somthing went wrong!" });
-        // return res.redirect(req.session.returnTo || "/");
+          return res.status(500).json({ message: "Somthing went wrong" });
+
         const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET);
+
         return res.status(200).json({
-          success: true,
-          message: "User logged in",
-          user: user,
-          token: token
+          message: "Sucessfully logged in",
+          token: token,
+          user: user
         });
       });
     })(req, res, next);
@@ -78,8 +75,7 @@ exports.registerUser = async (req, res) => {
   const validate = signUp.validate(userData, { abortEarly: false });
 
   if (validate.error) {
-    return res.status(200).json({
-      success: false,
+    return res.status(400).json({
       message: "Validation failed",
       errors: joiErrors(validate)
     });
@@ -88,8 +84,7 @@ exports.registerUser = async (req, res) => {
     const user = new User(userData);
     user.save(err => {
       if (err) {
-        return res.status(200).json({
-          success: false,
+        return res.status(400).json({
           message: "Validation failed",
           errors: mongooseErrors(err)
         });
@@ -117,22 +112,11 @@ exports.registerUser = async (req, res) => {
         html: `Thank you for registering with <b>CricApp</b>.<br/> To verify your email address please click on the following link, or paste this into your browser:<br/>http://${req.headers.host}/user/verify/${userData.emailVerificationToken}<br/><br/>Thank You!`
       };
 
-      transporter
-        .sendMail(mailOptions)
-        .then(() => {
-          return res.status(201).json({
-            success: true,
-            message: "User created successfully",
-            user: user
-          });
-        })
-        .catch(err => {
-          return res.status(400).json({
-            success: false,
-            message: "User created successfully",
-            errors: err
-          });
+      transporter.sendMail(mailOptions).then(() => {
+        return res.status(201).json({
+          message: "Sucessfully signed up"
         });
+      });
     });
   }
 };
@@ -145,8 +129,7 @@ exports.registerUser = async (req, res) => {
 exports.verifyEmail = async (req, res) => {
   const user = await User.findOne({ emailVerificationToken: req.params.token });
   if (user === null) {
-    return res.status(200).json({
-      success: false,
+    return res.status(402).json({
       message: "Token invalid or expired."
     });
   }
@@ -155,7 +138,6 @@ exports.verifyEmail = async (req, res) => {
     { emailVerificationToken: null, emailVerified: true }
   );
   return res.status(200).json({
-    success: true,
     message: "Email verified sucessfully."
   });
 };
