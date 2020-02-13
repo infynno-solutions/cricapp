@@ -1,8 +1,7 @@
 import {Config} from '../../common';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Alert} from 'react-native';
-import Errors from '../../utils/Errors';
+import Alert from '../Shared/Alert';
 
 export const loginUser = (user, navigation) => {
   return dispatch => {
@@ -10,18 +9,15 @@ export const loginUser = (user, navigation) => {
     axios
       .post(`${Config.apiUrl}/login`, user)
       .then(res => {
-        if (res.data.success === true) {
-          AsyncStorage.setItem('isLoggedIn', 'true');
-          AsyncStorage.setItem('token', res.data.token);
-          dispatch({type: 'LOGIN_SUCCESS', payload: res.data.data});
-          navigation.navigate('App');
-        } else {
-          dispatch({type: 'LOGIN_FAILURE', payload: res.data.errors});
-          Alert.alert(res.data.message, Errors(res.data.errors));
-        }
+        AsyncStorage.setItem('isLoggedIn', 'true');
+        AsyncStorage.setItem('token', res.data.token);
+        dispatch({type: 'LOGIN_SUCCESS', payload: res.data.data});
+        navigation.navigate('App');
+        Alert(res.data.message);
       })
       .catch(error => {
-        dispatch({type: 'LOGIN_FAILURE', payload: error.data});
+        dispatch({type: 'LOGIN_FAILURE', payload: error.response.data.message});
+        Alert(error.response.data.message, true);
       });
   };
 };
@@ -30,7 +26,7 @@ export const logoutUser = navigation => {
   AsyncStorage.removeItem('isLoggedIn');
   AsyncStorage.removeItem('token');
   navigation.navigate('Auth');
-  Alert.alert('Success', 'Logged Out');
+  Alert('Sucessfully logged out');
 
   return dispatch => {
     dispatch({type: 'LOGOUT_SUCCESS'});
@@ -43,21 +39,20 @@ export const registerUser = (user, navigation) => {
     axios
       .post(`${Config.apiUrl}/register`, user)
       .then(res => {
-        if (res.data.success === true) {
-          dispatch({
-            type: 'REGISTER_SUCCESS',
-            payload: res.data.user,
-            message: res.data.message,
-          });
-          navigation.navigate('Login');
-          Alert.alert('Success', res.data.message);
-        } else {
-          dispatch({type: 'REGISTER_FAILURE', payload: res.data.errors});
-          Alert.alert(res.data.message, Errors(res.data.errors));
-        }
+        dispatch({
+          type: 'REGISTER_SUCCESS',
+          payload: res.data.user,
+          message: res.data.message,
+        });
+        navigation.navigate('Login');
+        Alert(res.data.message);
       })
       .catch(error => {
-        dispatch({type: 'REGISTER_FAILURE', payload: error.data});
+        dispatch({
+          type: 'REGISTER_FAILURE',
+          payload: error.response.data.message,
+        });
+        Alert(error.response.data.message, true);
       });
   };
 };

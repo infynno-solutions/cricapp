@@ -13,6 +13,7 @@ import * as Yup from 'yup';
 import {connect} from 'react-redux';
 import {loginUser} from './AuthActions';
 import CustomTextInput from '../CustomTextInput';
+import Button from '../Shared/Button';
 
 const {height} = Dimensions.get('window');
 
@@ -34,7 +35,7 @@ class Login extends Component {
   }
 
   render() {
-    const {navigation} = this.props;
+    const {navigation, state} = this.props;
 
     return (
       <View style={styles.loginContainer}>
@@ -75,12 +76,11 @@ class Login extends Component {
                     Don't have an account? Register!
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  activeOpacity={0.8}
+                <Button
+                  title="Login"
                   onPress={handleSubmit}
-                  style={styles.loginButton}>
-                  <Text style={styles.loginButtonText}>Login</Text>
-                </TouchableOpacity>
+                  loading={state.isInprogress}
+                />
               </View>
             )}
           </Formik>
@@ -145,7 +145,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  {loginUser},
-)(Login);
+export default connect(mapStateToProps, {loginUser})(Login);

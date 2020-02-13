@@ -13,6 +13,7 @@ import * as Yup from 'yup';
 import {connect} from 'react-redux';
 import {registerUser} from './AuthActions';
 import CustomTextInput from '../CustomTextInput';
+import Button from '../Shared/Button';
 
 const {height} = Dimensions.get('window');
 
@@ -40,7 +41,7 @@ class Register extends Component {
   }
 
   render() {
-    const {navigation} = this.props;
+    const {navigation, state} = this.props;
 
     return (
       <View style={styles.registerContainer}>
@@ -96,12 +97,11 @@ class Register extends Component {
                     Already have an account? Login!
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  activeOpacity={0.8}
+                <Button
+                  title="Register"
                   onPress={handleSubmit}
-                  style={styles.registerButton}>
-                  <Text style={styles.registerButtonText}>Register</Text>
-                </TouchableOpacity>
+                  loading={state.registerUser.loading}
+                />
               </View>
             )}
           </Formik>
@@ -166,7 +166,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  {registerUser},
-)(Register);
+export default connect(mapStateToProps, {registerUser})(Register);
