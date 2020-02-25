@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Config} from '../../common';
 import {connect} from 'react-redux';
 import {logoutUser} from '../Auth/AuthActions';
 import {fetchProfile} from './ProfileActions';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Button from '../Shared/Button';
 
 class Profile extends Component {
   static navigationOptions = () => ({
@@ -77,12 +77,11 @@ class Profile extends Component {
               </View>
             </>
           )}
-          <TouchableOpacity
-            style={styles.logoutButton}
-            onPress={async () => await this.props.logoutUser(navigation)}>
-            <Text style={styles.logoutText}>Logout</Text>
-          </TouchableOpacity>
         </View>
+        <Button
+          title="Logout"
+          onPress={async () => await this.props.logoutUser(navigation)}
+        />
       </>
     );
   }
@@ -139,7 +138,4 @@ const mapStateToProps = state => {
   return {state: state.AuthReducers, profile: state.ProfileReducers};
 };
 
-export default connect(
-  mapStateToProps,
-  {logoutUser, fetchProfile},
-)(Profile);
+export default connect(mapStateToProps, {logoutUser, fetchProfile})(Profile);

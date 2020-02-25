@@ -6,6 +6,7 @@ import {
   Dimensions,
   StyleSheet,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import {Config} from '../../common';
 import {Formik} from 'formik';
@@ -15,7 +16,7 @@ import {loginUser} from './AuthActions';
 import CustomTextInput from '../CustomTextInput';
 import Button from '../Shared/Button';
 
-const {height} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 class Login extends Component {
   static navigationOptions = () => ({
@@ -41,7 +42,8 @@ class Login extends Component {
       <View style={styles.loginContainer}>
         <ScrollView>
           <View style={styles.headerTitleBG}>
-            <Text style={styles.headerTitle}>Hello! Welcome back</Text>
+          <Image style={styles.logo} source={require('../../images/logo.png')} />
+            {/* <Text style={styles.headerTitle}>Hello! Welcome back</Text> */}
           </View>
           <Formik
             initialValues={{username: '', password: ''}}
@@ -97,9 +99,12 @@ const styles = StyleSheet.create({
   },
   headerTitleBG: {
     backgroundColor: Config.primaryColor,
-    height: height / 3,
+    height: height / 2.5,
     paddingVertical: 20,
     paddingHorizontal: 30,
+    flex:1,
+    // justifyContent:'center',
+    alignItems:"center"
   },
   headerTitle: {
     color: '#ffffff',
@@ -136,6 +141,10 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: '#fff',
     textAlign: 'center',
+  },
+  logo: {
+    width: width / 2,
+    height: width / 2,
   },
 });
 
